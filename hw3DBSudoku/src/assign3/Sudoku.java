@@ -137,7 +137,8 @@ public class Sudoku {
 	
 	private int numSolutions;
 	private int[][] originalGrid;
-	private ArrayList<int[][]> completed;
+	private ArrayList<int[][]> completedList;
+	private ArrayList<Spot> spotsList;
 	private long msTime;
 
 	/**
@@ -161,6 +162,14 @@ public class Sudoku {
 	
 	public long getElapsed() {
 		return 0; // YOUR CODE HERE
+	}
+	
+	private class Spot{
+		ArrayList<Integer> possibleValues;
+		
+		public Spot(){
+			
+		}
 	}
 
 }
