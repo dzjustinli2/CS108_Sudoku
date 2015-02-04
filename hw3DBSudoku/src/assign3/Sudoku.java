@@ -153,7 +153,7 @@ public class Sudoku {
 	public static void main(String[] args) {
 		Sudoku sudoku;
 		sudoku = new Sudoku(hardGrid);
-		
+		//System.out.println(sudoku.spotsList.toString());
 		System.out.println(sudoku); // print the raw problem
 		int count = sudoku.solve();
 		System.out.println("solutions:" + count);
@@ -325,6 +325,9 @@ public class Sudoku {
 	      return sp1.size - sp2.size;
 	   }
 	   
+	   public String toString(){
+		   return "" + size;
+	   }
 	}
 
 }
