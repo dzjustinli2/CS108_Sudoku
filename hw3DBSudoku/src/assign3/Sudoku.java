@@ -120,6 +120,32 @@ public class Sudoku {
 		return result;
 	}
 
+	@Override
+	public String toString(){
+		StringBuilder str = new StringBuilder();
+		for(int i = 0; i < SIZE; i++){
+			for(int j = 0; j < SIZE; j++){
+				int value = originalGrid[i][j];
+				str.append(Integer.toString(value));
+				str.append(" ");
+			}
+			str.append("\n");
+		}
+		return str.toString();
+	}
+
+	public String toString(int[][] grid){
+		StringBuilder str = new StringBuilder();
+		for(int i = 0; i < SIZE; i++){
+			for(int j = 0; j < SIZE; j++){
+				int value = grid[i][j];
+				str.append(Integer.toString(value));
+				str.append(" ");
+			}
+			str.append("\n");
+		}
+		return str.toString();
+	}
 
 	// Provided -- the deliverable main().
 	// You can edit to do easier cases, but turn in
@@ -140,6 +166,10 @@ public class Sudoku {
 	private ArrayList<int[][]> completedList;
 	private ArrayList<Spot> spotsList;
 	private long msTime;
+	
+	public Sudoku(String board){
+		this(textToGrid(board));
+	}
 
 	/**
 	 * Sets up based on the given ints.
@@ -166,15 +196,26 @@ public class Sudoku {
 	 * Solves the puzzle, invoking the underlying recursive search.
 	 */
 	public int solve() {
-		return 0; // YOUR CODE HERE
+		long ms1 = System.currentTimeMillis();
+		recursion(originalGrid,0);
+		long ms2 = System.currentTimeMillis();
+		msTime = ms2 - ms1;
+		return numSolutions;
+	}
+	
+	private void recursion(int[][] grid, int index){
+		
 	}
 	
 	public String getSolutionText() {
-		return ""; // YOUR CODE HERE
+		if(numSolutions != 0){
+			return toString(completedList.get(0));
+		}
+		return "";
 	}
 	
 	public long getElapsed() {
-		return 0; // YOUR CODE HERE
+		return msTime;
 	}
 	
 	private int[][] copyGrid(int[][] oldGrid){
