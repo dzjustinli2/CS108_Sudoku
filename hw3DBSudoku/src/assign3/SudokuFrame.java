@@ -8,7 +8,8 @@ import java.awt.*;
 import java.awt.event.*;
 
 
- public class SudokuFrame extends JFrame {
+@SuppressWarnings("serial")
+public class SudokuFrame extends JFrame {
 	private static SudokuFrame frame;
 	private static Sudoku sudo;
 	private static JTextArea jtaC;
