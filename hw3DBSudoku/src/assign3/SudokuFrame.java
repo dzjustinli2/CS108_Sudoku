@@ -10,6 +10,7 @@ import java.awt.event.*;
 
  public class SudokuFrame extends JFrame {
 	private static SudokuFrame frame;
+	private static Sudoku sudo;
 	private static JTextArea jtaC;
 	private static JTextArea jtaE;
 	private static JButton Check;
@@ -42,9 +43,13 @@ import java.awt.event.*;
 		jf.setVisible(true);
 	}
 	
+	private void newBoard(){
+		sudo = new Sudoku(jtaC.getText());
+	}
+	
 	private static void boardChange(){
 		try{
-			Sudoku sudo = new Sudoku(jtaC.getText());
+			frame.newBoard();
 			int solutions = sudo.solve();
 			long elapsed = sudo.getElapsed();
 			String str = "solutions:" + solutions + "\n" + "elapsed:" + elapsed + "ms";
