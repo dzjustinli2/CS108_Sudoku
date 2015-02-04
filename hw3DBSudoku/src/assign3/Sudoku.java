@@ -164,22 +164,53 @@ public class Sudoku {
 		return 0; // YOUR CODE HERE
 	}
 	
-	private class Spot{
+	private int[][] copyGrid(int[][] oldGrid){
+		//Makes a new grid
+		int[][] newGrid = new int[SIZE][SIZE];
+		for (int i = 0; i < SIZE; i++) {
+			System.arraycopy(oldGrid[i], 0, newGrid[i], 0, SIZE);
+		}
+		return newGrid;
+	}
+	
+	private class Spot implements Comparator<Spot>, Comparable<Spot>{
 		private int row;
 		private int col;
 		private int startRow;
 		private int startCol;
+		private int size;
 		
-		public Spot(int i, int j){
+		public Spot(int i, int j, int[][] grid){
 			row = i;
 			col = j;
 			startRow = startIndex(row);
 			startCol = startIndex(col);
+			ArrayList<Integer> possibleValues = computePossibleValues(grid);
+			size = possibleValues.size();
 		}
 		
 		//Finds all of the possible values for this spot
 		public ArrayList<Integer> computePossibleValues(int[][] grid){
-			return null;
+			HashSet<Integer> allowedValues = fillSet();
+			for(int i = 0; i < SIZE; i++){
+				Integer valueA = new Integer(grid[row][i]);
+				Integer valueB = new Integer(grid[i][col]);
+				if(allowedValues.contains(valueA)){
+					allowedValues.remove(valueA);
+				}
+				if(allowedValues.contains(valueB)){
+					allowedValues.remove(valueB);
+				}
+			}
+			for(int i = 0; i < PART; i++){
+				for(int j = 0; j < PART; j++){
+					Integer value = new Integer(grid[startRow+i][startCol+j]);
+					if(allowedValues.contains(value)){
+						allowedValues.remove(value);
+					}
+				}
+			}
+			return new ArrayList<Integer>(allowedValues);
 		}
 		
 		private HashSet<Integer> fillSet(){
@@ -191,8 +222,10 @@ public class Sudoku {
 		}
 		
 		//Returns a new grid that is altered
-		public int[][] setValue(int[][] grid, int a){
-			return null;
+		public int[][] setValue(int[][] grid, int value){
+			int[][] newGrid = copyGrid(grid);
+			newGrid[row][col] = value;
+			return newGrid;
 		}
 		
 		private int startIndex(int value){
@@ -202,6 +235,19 @@ public class Sudoku {
 			if(reduced == 2) return 6;
 			return -1;
 		}
+		
+	   // Overriding the compareTo method
+	   public int compareTo(Spot sp){
+		   Integer thisSize = new Integer(this.size);
+		   Integer spSize = new Integer(sp.size);
+	      return thisSize.compareTo(spSize);
+	   }
+
+	   // Overriding the compare method to sort by size
+	   public int compare(Spot sp1, Spot sp2){
+	      return sp1.size - sp2.size;
+	   }
+	   
 	}
 
 }
