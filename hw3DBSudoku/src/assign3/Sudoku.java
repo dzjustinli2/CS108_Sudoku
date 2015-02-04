@@ -204,11 +204,35 @@ public class Sudoku {
 	}
 	
 	private void recursion(int[][] grid, int index){
-		
+		if(numSolutions >= MAX_SOLUTIONS) return;
+		if(isBoardComplete(grid)){
+			numSolutions = numSolutions + 1;
+			completedList.add(copyGrid(grid));
+			return;
+		}
+		Spot sp = spotsList.get(index);
+		ArrayList<Integer> possibleValues = sp.computePossibleValues(grid);
+		int numPos = possibleValues.size();
+		for(int j = 0; j < numPos; j++){
+			int value = possibleValues.get(j);
+			recursion(sp.setValue(grid,value),index+1);
+		}
+	}
+	
+	private boolean isBoardComplete(int[][] grid){
+		int sumValue = 0;
+		for(int i = 0; i < SIZE; i++){
+			for(int j = 0; j < SIZE; j++){
+				int value = grid[i][j];
+				sumValue = sumValue + value;
+				if(value == 0) return false;
+			}
+		}
+		return true;
 	}
 	
 	public String getSolutionText() {
-		if(numSolutions != 0){
+		if(numSolutions > 0){
 			return toString(completedList.get(0));
 		}
 		return "";
