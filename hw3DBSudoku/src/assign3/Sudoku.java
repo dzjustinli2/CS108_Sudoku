@@ -165,10 +165,42 @@ public class Sudoku {
 	}
 	
 	private class Spot{
-		ArrayList<Integer> possibleValues;
+		private int row;
+		private int col;
+		private int startRow;
+		private int startCol;
 		
-		public Spot(){
-			
+		public Spot(int i, int j){
+			row = i;
+			col = j;
+			startRow = startIndex(row);
+			startCol = startIndex(col);
+		}
+		
+		//Finds all of the possible values for this spot
+		public ArrayList<Integer> computePossibleValues(int[][] grid){
+			return null;
+		}
+		
+		private HashSet<Integer> fillSet(){
+			HashSet<Integer> hs = new HashSet<Integer>();
+			for(int i = 1; i < 10; i++){
+				hs.add(new Integer(i));
+			}
+			return hs;
+		}
+		
+		//Returns a new grid that is altered
+		public int[][] setValue(int[][] grid, int a){
+			return null;
+		}
+		
+		private int startIndex(int value){
+			int reduced = value/3;
+			if(reduced == 0) return 0;
+			if(reduced == 1) return 3;
+			if(reduced == 2) return 6;
+			return -1;
 		}
 	}
 
