@@ -145,8 +145,21 @@ public class Sudoku {
 	 * Sets up based on the given ints.
 	 */
 	public Sudoku(int[][] ints) {
-		// YOUR CODE HERE
-		
+		numSolutions = 0;
+		originalGrid = new int[SIZE][SIZE];
+		completedList = new ArrayList<int[][]>();
+		spotsList = new ArrayList<Spot>();
+		msTime = 0;
+		originalGrid = copyGrid(ints);
+		for(int i = 0; i < SIZE; i++){
+			for(int j = 0; j < SIZE; j++){
+				if(originalGrid[i][j] == 0){
+					Spot sp =  new Spot(originalGrid,i,j);
+					spotsList.add(sp);
+				}
+			}
+		}
+		Collections.sort(spotsList);
 	}
 	
 	/**
@@ -180,7 +193,7 @@ public class Sudoku {
 		private int startCol;
 		private int size;
 		
-		public Spot(int i, int j, int[][] grid){
+		public Spot(int[][] grid, int i, int j){
 			row = i;
 			col = j;
 			startRow = startIndex(row);
