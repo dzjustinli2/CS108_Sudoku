@@ -70,28 +70,23 @@ public class SudokuFrame extends JFrame {
 				}
 			}
 		});
-		
 		//JtaE changed Button
 		jtaC.getDocument().addDocumentListener(new DocumentListener() {
-
 			@Override
 			public void insertUpdate(DocumentEvent e) {
 				if(AutoCheck.isSelected()){
 					boardChange();
 				}
 			}
-			
 			@Override
 			public void removeUpdate(DocumentEvent e) {
 				if(AutoCheck.isSelected()){
 					boardChange();
 				}
 			}
-			
 			@Override
 			public void changedUpdate(DocumentEvent e) {
 			}
-			
 		});
 	}
 	
