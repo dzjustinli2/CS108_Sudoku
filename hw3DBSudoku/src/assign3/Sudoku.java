@@ -207,7 +207,7 @@ public class Sudoku {
 		if(numSolutions >= MAX_SOLUTIONS) return;
 		if(isBoardComplete(grid)){
 			numSolutions = numSolutions + 1;
-			completedList.add(copyGrid(grid));
+			completedList.add(grid);
 			return;
 		}
 		Spot sp = spotsList.get(index);
@@ -220,11 +220,9 @@ public class Sudoku {
 	}
 	
 	private boolean isBoardComplete(int[][] grid){
-		int sumValue = 0;
 		for(int i = 0; i < SIZE; i++){
 			for(int j = 0; j < SIZE; j++){
 				int value = grid[i][j];
-				sumValue = sumValue + value;
 				if(value == 0) return false;
 			}
 		}
@@ -264,6 +262,7 @@ public class Sudoku {
 			startRow = startIndex(row);
 			startCol = startIndex(col);
 			ArrayList<Integer> possibleValues = computePossibleValues(grid);
+			//The most constrained spots have a low number of possible values
 			size = possibleValues.size();
 		}
 		
