@@ -46,7 +46,7 @@ public class MetropolisFrame extends JFrame {
 		// Create a scroll pane in the center, and put
 		// the table in it
 		scrollpane = new JScrollPane(jt);
-		scrollpane.setPreferredSize(new Dimension(500,500));
+		scrollpane.setPreferredSize(new Dimension(500,300));
 	}
 
 	private void northPanel(){
@@ -97,7 +97,7 @@ public class MetropolisFrame extends JFrame {
 
         };
 		popine.addItem("Population Larger Than");
-		popine.addItem("Population Less Than");
+		popine.addItem("Population Less Than Or Equal");
 		match.addItem("Exact Match");
 		match.addItem("Partial Match");
 		jpE2.add(popine);
@@ -134,7 +134,6 @@ public class MetropolisFrame extends JFrame {
 		
 		metroFrame = new MetropolisFrame();
 		con = new Metropolis();
-		
 		listeners();
 	}
 }
