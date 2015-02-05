@@ -1,6 +1,7 @@
 package assign3;
 
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
 import javax.swing.event.*;
 
 import java.awt.*;
@@ -17,8 +18,11 @@ public class MetropolisFrame extends JFrame {
 	private JTextField conti;
 	private JTextField popu;
 	private JPanel jpE;
+	private JPanel jpE2;
 	private JButton add;
 	private JButton search;
+	private BasicTableModel model;
+	private JScrollPane scrollpane;
 	private JComboBox<String> popine;
 	private JComboBox<String> match;
 
@@ -28,7 +32,21 @@ public class MetropolisFrame extends JFrame {
 		jf.setLayout(new BorderLayout(4,4));
 		northPanel();
 		eastPanel();
+		centerPanel();
 		graphics();
+	}
+	
+	private void centerPanel(){
+		model = new BasicTableModel();
+		// Create a table using that model
+		model.addColumn("Metropolis");
+		model.addColumn("Continent");
+		model.addColumn("Population");
+		jt = new JTable(model);
+		// Create a scroll pane in the center, and put
+		// the table in it
+		scrollpane = new JScrollPane(jt);
+		scrollpane.setPreferredSize(new Dimension(500,500));
 	}
 
 	private void northPanel(){
@@ -58,20 +76,40 @@ public class MetropolisFrame extends JFrame {
 		search = new JButton("Search");
 		jpE.add(add);
 		jpE.add(search);
-		popine = new JComboBox<String>();
-		match = new JComboBox<String>();
+		jpE2 = new JPanel();
+		jpE2.setLayout(new BoxLayout(jpE2, BoxLayout.Y_AXIS));
+		popine = new JComboBox<String>(){
+            @Override
+            public Dimension getMaximumSize() {
+                Dimension max = super.getMaximumSize();
+                max.height = getPreferredSize().height;
+                return max;
+            }
+
+        };
+		match = new JComboBox<String>(){
+            @Override
+            public Dimension getMaximumSize() {
+                Dimension max = super.getMaximumSize();
+                max.height = getPreferredSize().height;
+                return max;
+            }
+
+        };
 		popine.addItem("Population Larger Than");
 		popine.addItem("Population Less Than");
 		match.addItem("Exact Match");
 		match.addItem("Partial Match");
-		jpE.add(popine);
-		jpE.add(match);
+		jpE2.add(popine);
+		jpE2.add(match);
+		jpE2.setBorder(new TitledBorder("Search Options"));
+		jpE.add(jpE2);
 	}
 	
 	private void graphics(){
 		jf.add(jpN,BorderLayout.NORTH);
 		jf.add(jpE,BorderLayout.EAST);
-		jf.add(jt,BorderLayout.CENTER);
+		jf.add(scrollpane,BorderLayout.CENTER);
 		//Set the title
 		jf.setTitle("Metropolis Viewer");
 		//Set everything in place
