@@ -16,12 +16,11 @@ public class Metropolis {
 	}
 	
 	public ResultSet add(String metro, String cont, String pop){
-		openDB();
+		if(metro.length() == 0 || cont.length() == 0 || pop.length() == 0) return null;
 		try{
-			String modQuery = "INSERT INTO metrolpolises VALUES";
-			modQuery = modQuery + "("+metro+","+cont+","+pop+");";
+			String modQuery = "INSERT INTO metropolises VALUES";
+			modQuery = modQuery + "(\""+metro+"\",\""+cont+"\",\""+pop+"\");";
 			stmt.executeUpdate(modQuery);
-			closeDB();
 			return search(metro,cont,pop,false,true); 
 		}catch(SQLException e){
 			e.printStackTrace();
@@ -30,12 +29,10 @@ public class Metropolis {
 	}
 	
 	public ResultSet search(String metro, String cont, String pop, boolean popLarger, boolean exact){
-		openDB();
 		try{
-			String idempQuery = "SELECT * FROM metropolises;";// WHERE ";
-			idempQuery = idempQuery + predicate(metro,cont,pop,popLarger,exact);
+			String idempQuery = "SELECT * FROM metropolises ";
+			idempQuery = idempQuery + predicate(metro,cont,pop,popLarger,exact) + ";";
 			ResultSet st = stmt.executeQuery(idempQuery);
-			closeDB();
 			return st; 
 		}catch(SQLException e){
 			e.printStackTrace();
@@ -44,20 +41,53 @@ public class Metropolis {
 	}
 	
 	public void re_source(){
-		openDB();
 		try{
-			stmt.executeUpdate("SOURCE metropolises.sql;");
+			//This command doesn't work
+			//Need to read in from file line by line
+			//and even then we have to check if the line is
+			//idempotent or destructive (query or update)
+			stmt.executeQuery("SOURCE metropolises.sql;");
 		}catch(SQLException e){
 			e.printStackTrace();
 		}
-		closeDB();
 	}
 	
 	private String predicate(String metro, String cont, String pop, boolean popLarger, boolean exact){
-		return "";
+		String query = "WHERE ";
+		if(metro.equals("") && cont.equals("") && pop.equals("")){
+			return "";
+		}
+		if(!metro.equals("")){
+			if(exact){
+				query = query + "metropolis = " + "\"" + metro + "\" ";
+			}else{
+				query = query + "metropolis LIKE " + "\"%" + metro + "%\" ";
+			}
+		}
+		if(!cont.equals("")){
+			if(!metro.equals("")){
+				query = query + "AND ";
+			}
+			if(exact){
+				query = query + "continent = " + "\"" + cont + "\" ";
+			}else{
+				query = query + "continent LIKE " + "\"%" + cont + "%\" ";
+			}
+		}
+		if(!pop.equals("")){
+			if(!metro.equals("") || !cont.equals("")){
+				query = query + "AND ";
+			}
+			if(popLarger){
+				query = query + "population > " + pop;
+			}else{
+				query = query + "population <= " + pop;
+			}
+		}
+		return query;
 	}
 	
-	private void openDB(){
+	public void openDB(){
 		try{
 			Class.forName("com.mysql.jdbc.Driver");
 			con = DriverManager.getConnection
@@ -73,7 +103,7 @@ public class Metropolis {
 		}	
 	}
 	
-	private void closeDB(){
+	public void closeDB(){
 		try{
 			con.close();
 		}

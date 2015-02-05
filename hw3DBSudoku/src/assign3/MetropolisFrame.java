@@ -7,6 +7,9 @@ import javax.swing.event.*;
 import java.awt.*;
 import java.awt.event.*;
 
+import java.sql.*;
+import java.util.*;
+
 @SuppressWarnings("serial")
 public class MetropolisFrame extends JFrame {
 	private static MetropolisFrame metroFrame;
@@ -21,6 +24,7 @@ public class MetropolisFrame extends JFrame {
 	private JPanel jpE2;
 	private JButton add;
 	private JButton search;
+	//private JButton re_source;
 	private BasicTableModel model;
 	private JScrollPane scrollpane;
 	private JComboBox<String> popine;
@@ -34,6 +38,7 @@ public class MetropolisFrame extends JFrame {
 		eastPanel();
 		centerPanel();
 		graphics();
+		listeners();
 	}
 	
 	private void centerPanel(){
@@ -74,8 +79,10 @@ public class MetropolisFrame extends JFrame {
 		jpE.setLayout(new BoxLayout(jpE, BoxLayout.Y_AXIS));
 		add = new JButton("Add");
 		search = new JButton("Search");
+		//re_source = new JButton("Source SQL");
 		jpE.add(add);
 		jpE.add(search);
+		//jpE.add(re_source);
 		jpE2 = new JPanel();
 		jpE2.setLayout(new BoxLayout(jpE2, BoxLayout.Y_AXIS));
 		popine = new JComboBox<String>(){
@@ -119,8 +126,96 @@ public class MetropolisFrame extends JFrame {
 		jf.setVisible(true);
 	}
 	
-	private static void listeners(){
+	private void clearRows(){
+		while(model.getRowCount() > 0){
+			model.deleteRow(0);
+		}
+	}
+	
+	private void clearText(){
+		metro.setText("");
+		conti.setText("");
+		popu.setText("");
+	}
+	private void listeners(){
+		add.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e){
+            	con.openDB();
+            	addLogic();
+            	con.closeDB();
+            }
+        });
 		
+		search.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e){
+            	con.openDB();
+            	searchLogic();
+            	con.closeDB();
+            }
+        });
+		
+		/*re_source.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e){
+            	con.openDB();
+            	con.re_source();
+            	con.closeDB();
+            }
+        });*/
+	}
+	
+	private void addLogic(){
+		clearRows();
+    	ResultSet rs = con.add(metro.getText(), conti.getText(), popu.getText());
+    	clearText();
+    	if(rs == null) return;
+    	ArrayList<String> ar = new ArrayList<String>(3);
+    	try{
+    		rs.next();
+    		for(int i = 1; i < 4; i++){
+    			ar.add(rs.getString(i));
+    		}
+    	}catch(SQLException ex){
+    		ex.printStackTrace();
+    	}
+    	model.addRow(ar);
+	}
+	
+	private void searchLogic(){
+		clearRows();
+    	boolean mat = false;
+    	boolean pop = false;
+    	if((popine.getSelectedItem()).equals("Population Larger Than")){
+    		pop = true;
+    	}
+    	if((match.getSelectedItem()).equals("Exact Match")){
+    		mat = true;
+    	}
+    	ResultSet rs = con.search(metro.getText(), conti.getText(), popu.getText(),pop,mat);
+    	if(rs == null) return;
+    	try{
+    		while(rs.next()){
+    			ArrayList<String> ar = new ArrayList<String>();
+	    		for(int i = 1; i < 4; i++){
+	    			if(addCol(metro.getText(),conti.getText(),popu.getText(),i)){
+	    				ar.add(rs.getString(i));
+	    			}else{
+	    				ar.add(null);
+	    			}
+	    		}
+	    		model.addRow(ar);
+    		}
+    	}catch(SQLException ex){
+    		ex.printStackTrace();
+    	}
+    	clearText();
+	}
+	
+	private boolean addCol(String metro, String conti, String popu, int index){
+		if(metro.equals("") && conti.equals("") && popu.equals("")) return true;
+		if(metro.equals("") && index == 1) return false;
+		if(conti.equals("") && index == 2) return false;
+		if(popu.equals("") && index == 3) return false;
+		return true;
 	}
 
 	public static void main(String[] args) {
@@ -134,6 +229,5 @@ public class MetropolisFrame extends JFrame {
 		
 		metroFrame = new MetropolisFrame();
 		con = new Metropolis();
-		listeners();
 	}
 }
