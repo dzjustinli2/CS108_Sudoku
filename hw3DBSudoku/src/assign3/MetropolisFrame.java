@@ -2,7 +2,6 @@ package assign3;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
-import javax.swing.event.*;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -196,11 +195,12 @@ public class MetropolisFrame extends JFrame {
     		while(rs.next()){
     			ArrayList<String> ar = new ArrayList<String>();
 	    		for(int i = 1; i < 4; i++){
-	    			if(addCol(metro.getText(),conti.getText(),popu.getText(),i)){
+	    			ar.add(rs.getString(i));
+	    			/*if(addCol(metro.getText(),conti.getText(),popu.getText(),i)){
 	    				ar.add(rs.getString(i));
 	    			}else{
 	    				ar.add(null);
-	    			}
+	    			}*/
 	    		}
 	    		model.addRow(ar);
     		}
@@ -210,13 +210,14 @@ public class MetropolisFrame extends JFrame {
     	clearText();
 	}
 	
+	/*
 	private boolean addCol(String metro, String conti, String popu, int index){
 		if(metro.equals("") && conti.equals("") && popu.equals("")) return true;
 		if(metro.equals("") && index == 1) return false;
 		if(conti.equals("") && index == 2) return false;
 		if(popu.equals("") && index == 3) return false;
 		return true;
-	}
+	}*/
 
 	public static void main(String[] args) {
 		// GUI Look And Feel
@@ -228,6 +229,7 @@ public class MetropolisFrame extends JFrame {
 		} catch (Exception ignored) { }
 		
 		metroFrame = new MetropolisFrame();
+		metroFrame.toString();
 		con = new Metropolis();
 	}
 }
