@@ -1,4 +1,4 @@
-USE c_cs108_psyoung;
+USE c_cs108_robinsca;
   -- >>>>>>>>>>>> change this line so it uses your database, not mine <<<<<<<<<<<<<<<
   
 DROP TABLE IF EXISTS metropolises;
